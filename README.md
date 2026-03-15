@@ -99,6 +99,9 @@ git checkout feature/data-pipeline
 
 4. 작업 시작!
 
+5. 본인 현재 위치한 브랜치 확인하고 싶을 때(잘 확인해야함!!): 
+
+   - git branch
 ---
 
 ## [작업 끝나면]
