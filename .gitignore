@@ -1,0 +1,17 @@
+ # 가상환경
+venv/
+
+# 데이터 & 모델 (Drive에서 관리)
+data/
+models/
+*.pt
+*.weights
+
+# 파이썬
+__pycache__/
+*.pyc
+.env
+
+# 실험 결과
+runs/
+results/
