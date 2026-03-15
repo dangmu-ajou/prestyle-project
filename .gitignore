@@ -1,9 +1,11 @@
- # 가상환경
+# 가상환경
 venv/
 
-# 데이터 & 모델 (Drive에서 관리)
-data/
-models/
+# 데이터 & 모델 파일만 무시 (폴더 구조는 유지)
+data/*
+!data/.gitkeep
+models/*
+!models/.gitkeep
 *.pt
 *.weights
 
