@@ -22,7 +22,7 @@
 cd 본인 폴더 경로 (예시: cd C:\Users\본인이름\OneDrive\바탕 화면\폴더 이름)
 
 3. 레포 클론하기:
-git clone https://github.com/팀이름/레포이름.git
+git clone https://github.com/dangmu-ajou/prestyle-project.git
 
 4. cd prestyle-project
 
