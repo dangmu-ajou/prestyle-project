@@ -9,7 +9,7 @@
 
 2. 터미널에 입력: python --version
 
-Python 3.x.x 이라고 뜨면 설치된 거야.
+3. Python 3.x.x 이라고 뜨면 설치된 거야.
 안 뜨면 https://www.python.org/downloads/ 에서 설치
 (설치할 때 Add Python to PATH 반드시 체크!)
 
