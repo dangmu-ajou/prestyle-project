@@ -2,7 +2,7 @@
 
 ---
 
-## 팀원 초기 셋업 가이드
+## [팀원 초기 셋업 가이드]
 
 ### STEP 1. Python 설치 확인
 1. VSCode 열고 상단 메뉴 → Terminal → New Terminal 클릭
@@ -81,7 +81,7 @@ git checkout feature/data-pipeline
 
 ---
 
-## 매일 작업 시작 전 루틴 (필수!)
+## [매일 작업 시작 전 루틴 (필수!)]
 
 1. dev 브랜치 최신 코드 받기:
 
@@ -101,7 +101,7 @@ git checkout feature/data-pipeline
 
 ---
 
-## 작업 끝나면
+## [작업 끝나면]
 
 1. 변경된 파일 확인:
 
@@ -127,7 +127,7 @@ git checkout feature/data-pipeline
 
 ---
 
-## 브랜치 역할
+## [브랜치 역할]
 - main : 최종 완성본 (직접 push 금지!)
 - dev : 통합 테스트 공간
 - feature/model-dev : 모델 개발
@@ -137,6 +137,6 @@ git checkout feature/data-pipeline
 
 ---
 
-## 데이터 & 모델
+## [데이터 & 모델]
 - 데이터셋 : Google Drive (링크 추가 예정)
 - 모델 가중치(.pt) : Google Drive (링크 추가 예정)
