@@ -136,7 +136,65 @@ git checkout feature/data-pipeline
 - feature/visualization : 시각화
 
 ---
+## [폴더 구조 설명]
 
+우리 프로젝트는 이런 구조로 되어있어.
+코드는 로컬 VSCode에서 작성하고, 데이터랑 모델은 Google Drive에서 관리하는 방식이야.
+```
+prestyle-project/
+├── configs/
+├── data/
+├── models/
+├── notebooks/
+├── src/
+├── tests/
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+### 📁 configs/
+모델한테 "데이터는 여기 있고, 탐지할 PPE 종류는 이거야" 알려주는 설정 파일 넣는 곳이야.
+코드 안에 경로나 설정값을 직접 박아넣으면 나중에 수정할 때 코드를 일일이 뒤져야 하니까
+따로 파일로 빼놓은 거야. 설정 바꿀 때 이 파일만 수정하면 돼.
+
+### 📁 data/
+실제 데이터 파일은 여기 없어!
+데이터는 용량이 크니까 Google Drive에서 관리하고, 폴더 구조만 만들어둔 거야.
+(로컬에 데이터 다 받으면 노트북 용량 터짐)
+
+### 📁 models/
+학습된 모델 파일(.pt)이 들어올 자리인데, 실제 파일은 Google Drive에 있어.
+웹캠이나 CCTV로 테스트할 때만 Drive에서 best.pt 파일 받아서 여기 넣으면 돼.
+
+### 📁 notebooks/
+Google Colab에서 실행할 파일 넣는 곳이야.
+흐름을 설명하자면:
+1. 로컬 VSCode에서 코드 작성
+2. GitHub에 push
+3. Colab에서 이 폴더 안에 있는 파일 열기
+4. Colab에서 학습 실행 (여기서 GPU 사용)
+5. 학습된 모델을 Drive에 저장
+
+### 📁 src/
+핵심 코드가 전부 여기 들어와. 코드 짤 때는 무조건 여기에 작성하면 돼.
+- train.py : 모델 학습 코드
+- detect.py : PPE 탐지 코드
+- track.py : 작업자 추적 코드
+
+### 📁 tests/
+모델 다 만들고 나서 실제로 잘 작동하는지 테스트하는 코드 넣는 곳이야.
+- webcam_test.py : 로지텍 웹캠 연결해서 실시간으로 탐지 확인
+- cctv_test.py : CCTV 영상 파일로 테스트
+
+### 전체 흐름 요약
+```
+① VSCode에서 src/ 폴더에 코드 작성
+② GitHub에 push
+③ Colab에서 코드 pull해서 학습 실행 (GPU 사용)
+④ 학습된 모델(best.pt) → Google Drive에 저장
+⑤ Drive에서 best.pt 받아서 tests/ 폴더 코드로 웹캠/CCTV 테스트
+```
 ## [데이터 & 모델]
 - 데이터셋 : Google Drive (링크 추가 예정)
 - 모델 가중치(.pt) : Google Drive (링크 추가 예정)
