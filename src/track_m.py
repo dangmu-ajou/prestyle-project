@@ -267,6 +267,7 @@ def run_tracking():
 
         # 화면 표시
         cv2.imshow("PPE Tracking System", frame)
+        cv2.setWindowProperty("PPE Tracking System", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
         # q 누르면 종료
         if cv2.waitKey(1) & 0xFF == ord("q"):
