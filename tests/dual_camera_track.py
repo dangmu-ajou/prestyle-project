@@ -13,7 +13,9 @@ from ultralytics import YOLO
 
 PERSON_CLASS_ID = 0
 
-MODELS_DIR = Path(__file__).resolve().parent.parent / "models"
+MODELS_DIR   = Path(__file__).resolve().parent.parent / "models"
+CONFIGS_DIR  = Path(__file__).resolve().parent.parent / "configs"
+BOTSORT_YAML = str(CONFIGS_DIR / "botsort.yaml")
 
 PPE_BODY_ZONES = {
     "helmet": {"top_ratio": 0.0,  "bottom_ratio": 0.25},
@@ -90,7 +92,7 @@ class CameraThread(threading.Thread):
         self._lock          = threading.Lock()
 
     def run(self):
-        cap = cv2.VideoCapture(self.cam_index)
+        cap = cv2.VideoCapture(self.cam_index, cv2.CAP_DSHOW)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH,  CAM_WIDTH)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT)
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
@@ -148,7 +150,7 @@ class CameraThread(threading.Thread):
                 conf=0.4,
                 iou=0.5,
                 imgsz=320,
-                tracker="bytetrack.yaml",
+                tracker=BOTSORT_YAML,
                 persist=True,
                 verbose=False,
             )
@@ -267,11 +269,11 @@ def run():
     inference_lock = threading.Lock()
 
     cam0 = CameraThread(
-        cam_index=0, cam_label="CAM 0 (내장)",
+        cam_index=0, cam_label="CAM 0 (USB)",
         stop_event=stop_event, inference_lock=inference_lock,
     )
     cam1 = CameraThread(
-        cam_index=1, cam_label="CAM 1 (USB)",
+        cam_index=1, cam_label="CAM 1 (내장)",
         stop_event=stop_event, inference_lock=inference_lock,
     )
 
@@ -283,12 +285,20 @@ def run():
     print("종료: q 키")
     print("=" * 50)
 
+    WIN = "듀얼 카메라 PPE 모니터"
+    cv2.namedWindow(WIN, cv2.WINDOW_NORMAL)
+    cv2.setWindowProperty(WIN, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
     while not stop_event.is_set():
         frame0 = cam0.get_frame()
         frame1 = cam1.get_frame()
 
+        # 두 프레임을 같은 높이로 맞춰 좌우 합치기
+        if frame0.shape[0] != frame1.shape[0]:
+            frame1 = cv2.resize(frame1, (frame1.shape[1], frame0.shape[0]))
         combined = np.hstack([frame0, frame1])
-        cv2.imshow("Dual Camera PPE Tracking", combined)
+
+        cv2.imshow(WIN, combined)
 
         if cv2.waitKey(1) & 0xFF == ord("q"):
             stop_event.set()
