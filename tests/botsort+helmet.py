@@ -1,5 +1,4 @@
 import cv2
-import os
 from ultralytics import YOLO
 
 # ============================================
@@ -22,10 +21,6 @@ COLOR_YELLOW = (0, 255, 255)
 COLOR_ORANGE = (0, 165, 255)
 COLOR_WHITE = (255, 255, 255)
 
-# 입출력 경로
-INPUT_VIDEO = "data/input/test.mp4"
-OUTPUT_VIDEO = "data/output/result.mp4"
-
 
 def check_ppe_in_zone(ppe_box, person_box, ppe_class_name):
     px1, py1, px2, py2 = person_box
@@ -44,46 +39,27 @@ def check_ppe_in_zone(ppe_box, person_box, ppe_class_name):
 
 def run():
     # 모델 로드
-    person_model = YOLO("yolov8m.pt")
+    person_model = YOLO("yolov8n.pt")
     ppe_model = YOLO("models/best.pt")
 
-    # 영상 열기
-    cap = cv2.VideoCapture(INPUT_VIDEO)
+    # 웹캠 연결
+    cap = cv2.VideoCapture(1)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
     if not cap.isOpened():
-        print(f"영상을 열 수 없습니다: {INPUT_VIDEO}")
+        print("웹캠을 열 수 없습니다")
         return
 
-    # 영상 정보
-    fps = int(cap.get(cv2.CAP_PROP_FPS))
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-
-    # 출력 폴더 생성
-    os.makedirs("outputs", exist_ok=True)
-
-    # 영상 저장 설정
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    out = cv2.VideoWriter(OUTPUT_VIDEO, fourcc, fps, (width, height))
-
     print("=" * 40)
-    print("헬멧 감지 테스트 시작")
-    print(f"입력: {INPUT_VIDEO}")
-    print(f"출력: {OUTPUT_VIDEO}")
-    print(f"해상도: {width}x{height}, FPS: {fps}")
-    print(f"총 프레임: {total_frames}")
+    print("헬멧 감지 (웹캠) 시작")
+    print("종료: q 키")
     print("=" * 40)
-
-    frame_count = 0
 
     while True:
         ret, frame = cap.read()
         if not ret:
             break
-
-        frame_count += 1
-        if frame_count % 10 == 0:
-            print(f"처리 중... {frame_count}/{total_frames} ({int(frame_count/total_frames*100)}%)")
 
         # 사람 감지 + 추적
         results = person_model.track(
@@ -172,14 +148,13 @@ def run():
                 zone_25 = py1 + int((py2 - py1) * 0.25)
                 cv2.line(frame, (px1, zone_25), (px2, zone_25), COLOR_YELLOW, 1)
 
-        # 프레임 저장
-        out.write(frame)
+        cv2.imshow("Helmet Detection - Webcam", frame)
+
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
 
     cap.release()
-    out.release()
-    print("=" * 40)
-    print(f"완료! 결과 영상: {OUTPUT_VIDEO}")
-    print("=" * 40)
+    cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":

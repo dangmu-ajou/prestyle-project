@@ -3,7 +3,7 @@ from ultralytics import YOLO
 
 def run_test():
     # 학습된 헬멧 탐지 모델 불러오기
-    model = YOLO("models/best.pt")
+    model = YOLO("models/best_helmet.pt")
 
     # 외장 USB 웹캠 연결 (안되면 2, 3으로 바꿔봐)
     cap = cv2.VideoCapture(1)
