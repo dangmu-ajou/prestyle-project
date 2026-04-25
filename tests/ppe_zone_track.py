@@ -39,7 +39,7 @@ from ultralytics import YOLO
 # 설정
 # ============================================
 
-CAM_INDEX    = 1
+CAM_INDEX    = 0
 CAM_W        = 640
 CAM_H        = 480
 
@@ -49,7 +49,8 @@ PPE_CONF     = 0.40
 PPE_INTERVAL  = 3   # N프레임마다 PPE 추론 (높을수록 빠름, 낮을수록 정확)
 TRACK_MAX_AGE = 8   # 감지 누락 허용 프레임 (깜빡임 방지)
 
-MODELS_DIR = Path(__file__).resolve().parent.parent / "models"
+MODELS_DIR  = Path(__file__).resolve().parent.parent / "models"
+CONFIGS_DIR = Path(__file__).resolve().parent.parent / "configs"
 
 # ── 신체 존 정의 (신장 H 기준 비율) ──
 # y_top / y_bot : person bbox 상단에서의 비율  (0.0 = 머리 꼭대기)
@@ -167,6 +168,10 @@ def run():
     print("PPE 추적 시작 (USB 카메라)  q → 종료")
     print("=" * 45)
 
+    WIN_NAME = "PPE Zone Tracking (USB)"
+    cv2.namedWindow(WIN_NAME, cv2.WINDOW_NORMAL)
+    cv2.setWindowProperty(WIN_NAME, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
     # track_id → {box, ppe_status, age}
     track_state: dict = {}
     frame_count = 0
@@ -187,7 +192,7 @@ def run():
             conf=PERSON_CONF,
             iou=0.5,
             imgsz=320,
-            tracker="bytetrack.yaml",
+            tracker=str(CONFIGS_DIR / "botsort_no_reid.yaml"),
             persist=True,
             verbose=False,
         )
@@ -280,13 +285,13 @@ def run():
 
             if not missing:
                 box_color = GREEN
-                status    = f"ID:{tid} OK"
+                status    = "OK"
             elif worn:
                 box_color = ORANGE
-                status    = f"ID:{tid} No {', '.join(missing)}!"
+                status    = f"No {', '.join(missing)}!"
             else:
                 box_color = RED
-                status    = f"ID:{tid} No PPE!"
+                status    = "No PPE!"
 
             cv2.rectangle(frame, (px1, py1), (px2, py2), box_color, 2)
             cv2.putText(frame, status, (px1, max(py1 - 10, 15)),
@@ -301,7 +306,7 @@ def run():
                             (abs_box[0], max(abs_box[1] - 4, 10)),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.4, color, 1)
 
-        cv2.imshow("PPE Zone Tracking (USB)", frame)
+        cv2.imshow(WIN_NAME, frame)
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
