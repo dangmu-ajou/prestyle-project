@@ -1,0 +1,28 @@
+# BoT-SORT 설정 파일 (ReID 활성화)
+# 이 파일을 configs/ 폴더에 넣거나 프로젝트 루트에 두세요
+
+tracker_type: botsort
+
+# 추적 임계값
+track_high_thresh: 0.5      # 높은 신뢰도 추적 임계값
+track_low_thresh: 0.1       # 낮은 신뢰도 추적 임계값
+new_track_thresh: 0.6       # 새 트랙 생성 임계값
+
+# 버퍼 설정 (ID 유지 시간)
+track_buffer: 60             # 사라진 후 ID를 유지하는 프레임 수 (기본 30 → 60으로 증가)
+
+# 매칭 임계값
+match_thresh: 0.8            # 매칭 임계값
+fuse_score: true
+proximity_thresh: 0.5        # 근접도 임계값
+appearance_thresh: 0.25      # 외형 유사도 임계값
+
+# ReID 설정 (핵심!)
+with_reid: true              # 외형 기반 재식별 활성화
+model: auto
+
+# GMC (Global Motion Compensation)
+gmc_method: sparseOptFlow    # 카메라 움직임 보정 방법
+
+# 칼만 필터
+cmc_method: sparseOptFlow
