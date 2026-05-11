@@ -1,10 +1,10 @@
-"""
+'''
 카메라 PPE 추적 스크립트 (신체 5존 버전)
 사람(yolov8n) + 헬멧 + 조끼 + 장갑(좌/우 분리) + 안전화 (Yolov8s 모델)
 
 GPU(CUDA) 감지 시: TensorRT 자동 변환 + FP16 추론
 배치 추론: 같은 모델을 쓰는 crop 묶어서 한 번에 처리
-"""
+'''
 
 import cv2
 import threading
