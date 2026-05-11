@@ -1,0 +1,17 @@
+tracker_type: botsort
+
+track_high_thresh: 0.5
+track_low_thresh: 0.1
+new_track_thresh: 0.5
+
+track_buffer: 30
+
+match_thresh: 0.8
+fuse_score: true
+proximity_thresh: 0.5
+appearance_thresh: 0.25
+
+with_reid: false             # ReID 비활성화 — CPU 부담 없이 Kalman 필터만 사용
+
+gmc_method: sparseOptFlow
+cmc_method: sparseOptFlow
